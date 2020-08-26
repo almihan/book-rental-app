@@ -8,6 +8,7 @@ const books = [
     numberInStock: 7,
     dailyRentalRate: 1.5,
     publishDate: '2020-01-03T19:04:28.809Z',
+    liked: true,
   },
   {
     _id: '3e454r456789ti0984r43477',
@@ -57,6 +58,7 @@ const books = [
     genre: { _id: '54e3456yh67u787gt56y6787', name: 'Horror' },
     numberInStock: 4,
     dailyRentalRate: 3.5,
+    liked: true,
   },
   {
     _id: '3e454r456789ti0984r43484',
