@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import { getBooks } from '../services/bookService';
 import { getGenres } from '../services/genreService';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import GenresGroup from './common/genresGroup';
 import BooksTable from './booksTable';
+import SearchBox from './searchBox';
+
 import _ from 'lodash';
 
 class Books extends Component {
@@ -13,12 +17,13 @@ class Books extends Component {
     genres: [],
     pageSize: 3,
     currentPage: 1,
-    selectedGenre: { _id: '', name: 'All Genres' },
+    searchQuery: '',
+    selectedGenre: null,
     sortColumn: { col: 'title', order: 'asc' },
   };
 
   componentDidMount() {
-    const genres = [{ _id: '', name: 'All Genres' }, ...getGenres()];
+    const genres = [{ name: 'All Genres' }, ...getGenres()];
     this.setState({ books: getBooks(), genres });
   }
 
@@ -40,7 +45,11 @@ class Books extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: '', currentPage: 1 });
+  };
+
+  handleSearch = (query) => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
   handleSort = (sortColumn) => {
@@ -48,12 +57,17 @@ class Books extends Component {
   };
 
   getPagedData = () => {
-    const filtered =
-      this.state.selectedGenre && this.state.selectedGenre._id
-        ? this.state.books.filter(
-            (book) => book.genre._id === this.state.selectedGenre._id
-          )
-        : this.state.books;
+    let filtered = this.state.books;
+    if (this.state.searchQuery)
+      filtered = this.state.books.filter((book) =>
+        book.title
+          .toLowerCase()
+          .startsWith(this.state.searchQuery.toLowerCase())
+      );
+    else if (this.state.selectedGenre && this.state.selectedGenre._id)
+      filtered = this.state.books.filter(
+        (book) => book.genre._id === this.state.selectedGenre._id
+      );
 
     const sorted = _.orderBy(
       filtered,
@@ -81,7 +95,14 @@ class Books extends Component {
           />
         </div>
         <div className='col'>
+          <Link className='btn btn-primary mb-4' to='books/add'>
+            Add Book
+          </Link>
           <h1>showing {totalCount} books in the database</h1>
+          <SearchBox
+            value={this.state.searchQuery}
+            onChange={this.handleSearch}
+          />
           <BooksTable
             books={books}
             onDelete={this.handleDelete}

@@ -8,16 +8,13 @@ const GenresGroup = (props) => {
     onItemSeltect,
     selectedItem,
   } = props;
-  console.log(selectedItem);
   return (
     <ul className='list-group'>
       {items.map((item) => (
         <li
-          key={item[textProperty]}
+          key={item[valueProperty]}
           className={
-            selectedItem[textProperty] === item[textProperty]
-              ? 'list-group-item active'
-              : 'list-group-item'
+            selectedItem === item ? 'list-group-item active' : 'list-group-item'
           }
           onClick={() => onItemSeltect(item)}
         >
