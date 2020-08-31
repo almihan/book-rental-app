@@ -49,7 +49,7 @@ class BookForm extends Form {
   render() {
     return (
       <div>
-        <h1>BookForm {this.props.match.params.id}</h1>
+        <h1>BookForm </h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
           {this.renderSelect('genreId', 'Genre', this.state.genres)}
